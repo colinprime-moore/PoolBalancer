@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#0a3d5c" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="Pool Balance" />
+<meta name="description" content="Bromine pool chemistry calculator for a 12,000 gallon indoor heated pool" />
+<title>Pool Balance</title>
+<link rel="manifest" href="manifest.json" />
+<link rel="icon" type="image/png" href="icons/icon-192.png" />
+<link rel="apple-touch-icon" href="icons/icon-192.png" />
+<link rel="stylesheet" href="styles.css" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<div class="bg-wash" aria-hidden="true"></div>
+
+<header class="app-header">
+  <div class="brand">
+    <svg class="brand-mark" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+      <path d="M16 4 C 22 12, 24 17, 24 21 a 8 8 0 0 1 -16 0 c 0 -4, 2 -9, 8 -17 z" fill="currentColor"/>
+      <circle cx="13" cy="20" r="1.5" fill="rgba(255,255,255,0.5)"/>
+    </svg>
+    <div>
+      <h1>Pool Balance</h1>
+      <p class="sub">12,000 gal · indoor · bromine</p>
+    </div>
+  </div>
+  <button id="history-btn" class="icon-btn" aria-label="History">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
+      <path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l3 2"/>
+    </svg>
+  </button>
+</header>
+
+<main class="app-main">
+
+<!-- ============ INPUT PAGE ============ -->
+<section id="page-input" class="page page-active">
+
+  <div class="intro">
+    <p class="eyebrow">Today's test</p>
+    <h2 class="display">Enter your readings.</h2>
+    <p class="lede">We'll tell you exactly what to add — and in what order.</p>
+  </div>
+
+  <form id="reading-form" class="form" novalidate>
+
+    <div class="field">
+      <div class="field-head">
+        <label for="ph">pH</label>
+        <span class="target">target 7.2 – 7.6</span>
+      </div>
+      <input type="number" id="ph" step="0.1" min="6" max="9" placeholder="7.4" inputmode="decimal" required />
+    </div>
+
+    <div class="field">
+      <div class="field-head">
+        <label for="br">Total bromine</label>
+        <span class="target">target 3 – 5 ppm</span>
+      </div>
+      <div class="input-with-unit">
+        <input type="number" id="br" step="0.1" min="0" max="20" placeholder="4.0" inputmode="decimal" required />
+        <span class="unit">ppm</span>
+      </div>
+    </div>
+
+    <div class="field">
+      <div class="field-head">
+        <label for="ta">Total alkalinity</label>
+        <span class="target">target 80 – 120 ppm</span>
+      </div>
+      <div class="input-with-unit">
+        <input type="number" id="ta" step="1" min="0" max="400" placeholder="100" inputmode="numeric" required />
+        <span class="unit">ppm</span>
+      </div>
+    </div>
+
+    <div class="field">
+      <div class="field-head">
+        <label for="ch">Total hardness</label>
+        <span class="target">target 200 – 400 ppm</span>
+      </div>
+      <div class="input-with-unit">
+        <input type="number" id="ch" step="1" min="0" max="1000" placeholder="250" inputmode="numeric" required />
+        <span class="unit">ppm</span>
+      </div>
+    </div>
+
+    <div class="field">
+      <div class="field-head">
+        <label for="temp">Temperature</label>
+        <span class="target">indoor 27 – 30 °C</span>
+      </div>
+      <div class="input-with-unit">
+        <input type="number" id="temp" step="0.5" min="0" max="40" placeholder="28" inputmode="decimal" required />
+        <span class="unit">°C</span>
+      </div>
+    </div>
+
+    <details class="advanced">
+      <summary>Optional · for shock detection</summary>
+      <div class="field">
+        <div class="field-head">
+          <label for="fbr">Free bromine</label>
+          <span class="target">if measured separately</span>
+        </div>
+        <div class="input-with-unit">
+          <input type="number" id="fbr" step="0.1" min="0" max="20" placeholder="3.5" inputmode="decimal" />
+          <span class="unit">ppm</span>
+        </div>
+      </div>
+    </details>
+
+    <button type="submit" class="btn-primary">
+      Calculate doses
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
+      </svg>
+    </button>
+
+  </form>
+</section>
+
+<!-- ============ RESULTS PAGE ============ -->
+<section id="page-results" class="page">
+  <button id="back-btn" class="back-link">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+      <path d="m15 18-6-6 6-6"/>
+    </svg>
+    New reading
+  </button>
+
+  <div class="results-header">
+    <p class="eyebrow" id="result-timestamp">Today's report</p>
+    <h2 class="display" id="result-headline">Your pool needs attention</h2>
+  </div>
+
+  <div id="readings-grid" class="readings-grid"></div>
+
+  <div class="section-divider">
+    <span>Action plan</span>
+  </div>
+
+  <div id="actions-list" class="actions-list"></div>
+
+  <div class="footnote">
+    <strong>Halve and wait.</strong> Add half the calculated amount, run the pump for 4–6 hours, then retest before adding more. Never mix chemicals together — always add each separately to the water.
+  </div>
+
+  <button id="save-btn" class="btn-secondary">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
+      <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+      <path d="M17 21v-8H7v8M7 3v5h8"/>
+    </svg>
+    Save to history
+  </button>
+
+</section>
+
+<!-- ============ HISTORY PAGE ============ -->
+<section id="page-history" class="page">
+  <button id="history-back-btn" class="back-link">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+      <path d="m15 18-6-6 6-6"/>
+    </svg>
+    Back
+  </button>
+
+  <div class="intro">
+    <p class="eyebrow">Logbook</p>
+    <h2 class="display">Past readings.</h2>
+  </div>
+
+  <div id="history-list" class="history-list"></div>
+</section>
+
+</main>
+
+<div id="install-prompt" class="install-prompt" hidden>
+  <div>
+    <strong>Install Pool Balance</strong>
+    <p>Add to your home screen for offline use.</p>
+  </div>
+  <div class="install-actions">
+    <button id="install-dismiss" class="btn-text">Not now</button>
+    <button id="install-accept" class="btn-pill">Install</button>
+  </div>
+</div>
+
+<script src="app.js"></script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('sw.js').catch(err => console.warn('SW registration failed:', err));
+    });
+  }
+</script>
+</body>
+</html>
