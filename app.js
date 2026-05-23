@@ -442,38 +442,4 @@
     });
   }
 
-  // ----- INSTALL PROMPT -----
-  let deferredPrompt = null;
-  const installPrompt = $('install-prompt');
-  const installAccept = $('install-accept');
-  const installDismiss = $('install-dismiss');
-  const INSTALL_DISMISSED_KEY = 'pool-balance-install-dismissed';
-
-  window.addEventListener('beforeinstallprompt', (e) => {
-    e.preventDefault();
-    deferredPrompt = e;
-    if (!localStorage.getItem(INSTALL_DISMISSED_KEY)) {
-      setTimeout(() => { installPrompt.hidden = false; }, 2500);
-    }
-  });
-
-  installAccept.addEventListener('click', async () => {
-    installPrompt.hidden = true;
-    if (deferredPrompt) {
-      deferredPrompt.prompt();
-      await deferredPrompt.userChoice;
-      deferredPrompt = null;
-    }
-  });
-
-  installDismiss.addEventListener('click', () => {
-    installPrompt.hidden = true;
-    localStorage.setItem(INSTALL_DISMISSED_KEY, '1');
-  });
-
-  window.addEventListener('appinstalled', () => {
-    installPrompt.hidden = true;
-    deferredPrompt = null;
-  });
-
 })();
